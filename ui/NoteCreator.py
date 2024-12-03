@@ -1,5 +1,5 @@
 import dearpygui.dearpygui as dpg
-from Note import Note
+from models.Note import Note
 
 class NoteCreator:
     def __init__(self, width, height, editor):
@@ -26,4 +26,4 @@ class NoteCreator:
                 self.active_note.add_parent(new_note)
             elif relation_type == "neighbor":
                 self.active_note.add_neighbor(new_note)
-        self.editor.set_active_note(new_note)
+        self.set_active_note(new_note)
