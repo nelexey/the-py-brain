@@ -32,9 +32,13 @@ def main():
     # Create UI components
     editor = NoteEditor(480, 500)
     creator = NoteCreator(480, 100, editor)
-    graph = NoteGraph(creator, 720, 600)
+    graph = NoteGraph(creator, editor, 720, 600)
+
+    # Connect components
     editor.graph = graph
     editor.creator = creator
+    creator.graph = graph
+
 
     # Set initial note
     if Note._all_notes:
@@ -50,7 +54,7 @@ def main():
     print(f"Most Connected Notes: {[n.title for n, _ in stats['most_connected_notes']]}")
 
     # Create viewport
-    dpg.create_viewport(title='Note Viewer', width=1200, height=700)
+    dpg.create_viewport(title='Note Viewer', width=1200, height=600)
     dpg.setup_dearpygui()
     dpg.show_viewport()
     dpg.start_dearpygui()

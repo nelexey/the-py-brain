@@ -5,8 +5,9 @@ from models.Note import Note
 
 
 class NoteGraph:
-    def __init__(self, creator, width: int, height: int):
+    def __init__(self, creator, editor, width: int, height: int):
         self.creator = creator
+        self.editor = editor
         self.active_note: Optional[Note] = None
         self.positions: Dict[Note, Tuple[float, float]] = {}
         self.zoom_level = 1.0
@@ -36,7 +37,12 @@ class NoteGraph:
 
     def setup_window(self, width: int, height: int) -> None:
         with dpg.window(label="Graph View", pos=(0, 0), width=width, height=height,
-                        tag="graph_window", no_scrollbar=True):
+                        tag="graph_window",
+                        no_scrollbar=True,
+                        no_close=True,
+                        no_collapse=True,
+                        no_title_bar=True,
+                        no_scroll_with_mouse=True):
             # Main drawing canvas
             with dpg.drawlist(width=width, height=height, tag="draw_layer"):
                 pass
@@ -64,6 +70,7 @@ class NoteGraph:
         """Set the active note and update the graph view"""
         self.active_note = note
         self.creator.set_active_note(note)
+        self.editor.update_note_view()
         self.update_graph()
 
     def update_graph(self) -> None:
@@ -186,11 +193,11 @@ class NoteGraph:
             return
 
         # app_data для mouse_drag содержит delta_x и delta_y
-        drag_x = app_data[0]
-        drag_y = app_data[1]
-
-        self.scroll_x -= drag_x / self.zoom_level
-        self.scroll_y -= drag_y / self.zoom_level
+        # drag_x = app_data[0]
+        # drag_y = app_data[1]
+        #
+        # self.scroll_x -= drag_x / self.zoom_level
+        # self.scroll_y -= drag_y / self.zoom_level
 
         self.update_graph()
 
@@ -234,8 +241,11 @@ class NoteGraph:
 
         # Adjust scroll to maintain mouse position
         zoom_delta = self.zoom_level - old_zoom
-        self.scroll_x -= (mouse_pos[0] - center_x) * (zoom_delta / self.zoom_level)
-        self.scroll_y -= (mouse_pos[1] - center_y) * (zoom_delta / self.zoom_level)
+        # self.scroll_x -= (mouse_pos[0] - center_x) * (zoom_delta / self.zoom_level)
+        # self.scroll_y -= (mouse_pos[1] - center_y) * (zoom_delta / self.zoom_level)
+
+        self.scroll_x -= (center_x) * (zoom_delta / self.zoom_level)
+        self.scroll_y -= (center_y) * (zoom_delta / self.zoom_level)
 
         self.update_graph()
 
