@@ -13,7 +13,13 @@ class NoteEditor:
         self.create_gui(width, height)
 
     def create_gui(self, width, height):
-        with dpg.window(label="Note Editor", pos=(720, 0), width=width, height=height, tag="note_editor_window"):
+        with dpg.window(label="Note Editor",
+                        pos=(720, 0),
+                        width=width,
+                        height=height,
+                        tag="note_editor_window",
+                        no_close=True,
+                        no_collapse=True):
             # Title input
             dpg.add_input_text(
                 label="Title",
@@ -45,6 +51,10 @@ class NoteEditor:
                 dpg.add_group(tag="parents_group", label="Parents")
                 dpg.add_group(tag="neighbors_group", label="Neighbors")
                 dpg.add_group(tag="children_group", label="Children")
+
+    def update_size(self, width, height):
+        """Update window size and adjust content"""
+        dpg.configure_item("note_text", width=width - 20, height=height - 150)
 
     def on_value_change(self, sender, app_data):
         """Called when any input value changes"""

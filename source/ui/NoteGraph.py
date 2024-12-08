@@ -56,8 +56,14 @@ class NoteGraph:
             # Event handlers
             with dpg.handler_registry():
                 dpg.add_mouse_wheel_handler(callback=self.on_mouse_scroll)
-                dpg.add_mouse_drag_handler(callback=self.on_mouse_drag, button=dpg.mvMouseButton_Left)
                 dpg.add_mouse_click_handler(callback=self.on_mouse_click)
+
+    def update_size(self, width, height):
+        """Update window size and redraw graph"""
+        self.window_width = width
+        self.window_height = height
+        dpg.configure_item("draw_layer", width=width, height=height)
+        self.update_graph()
 
     def reset_view(self) -> None:
         """Reset zoom and scroll position to default values"""
@@ -186,20 +192,6 @@ class NoteGraph:
         logical_x = (x - center_x) / self.zoom_level + self.scroll_x
         logical_y = (y - center_y) / self.zoom_level + self.scroll_y
         return (logical_x, logical_y)
-
-    def on_mouse_drag(self, sender, app_data) -> None:
-        """Handle mouse dragging for pan operation"""
-        if not dpg.is_mouse_button_down(dpg.mvMouseButton_Left):
-            return
-
-        # app_data для mouse_drag содержит delta_x и delta_y
-        # drag_x = app_data[0]
-        # drag_y = app_data[1]
-        #
-        # self.scroll_x -= drag_x / self.zoom_level
-        # self.scroll_y -= drag_y / self.zoom_level
-
-        self.update_graph()
 
     def on_mouse_click(self, sender, app_data) -> None:
         """Handle mouse clicks for node selection"""

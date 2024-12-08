@@ -10,7 +10,7 @@ class NoteCreator:
         self.create_gui(width, height)
 
     def create_gui(self, width, height):
-        with dpg.window(label="Note Creator", pos=(720, 500), width=width, height=height, tag="note_creator_window"):
+        with dpg.window(label="Note Creator", pos=(720, 500), width=width, height=height, tag="note_creator_window", no_close=True, no_collapse=True):
             with dpg.group(horizontal=True):
                 dpg.add_button(
                     label="Create Child",
@@ -27,6 +27,13 @@ class NoteCreator:
                     callback=lambda: self.create_note("neighbor"),
                     width=width//3 - 5
                 )
+
+    def update_size(self, width, height):
+        """Update window size and adjust buttons"""
+        button_width = width // 3 - 5
+        for child in dpg.get_item_children("note_creator_window")[1]:
+            if dpg.get_item_type(child) == "mvAppItemType::mvButton":
+                dpg.configure_item(child, width=button_width)
 
     def set_active_note(self, note):
         """Set the active note for creation context"""
